@@ -5,12 +5,18 @@ import random
 def randomselection(env):
 
     """
-    this function random selection algorithm
+    this function weighted random selection algorithm
     """
 
     # asking for number of resturant
     numberOfResturants = int(input("enter the number of resturants/ hotels: "))
     avg = 0
+
+    # creting a weighted resturant list
+    weighted = []
+    for i in range(1,numberOfResturants+1):
+        weighted += [i]*i # appending i j times
+
 
     while True:
         resturantWithoutAgents = 0
@@ -20,13 +26,13 @@ def randomselection(env):
 
         # randomly assigning agents to resturant
         for i in range(numberOfResturants):
-            resturants[random.randint(1,numberOfResturants)] = 1
+            resturants[random.choice(weighted)] = 1
 
         # checking resturant without agents
         for i in resturants:
             if not resturants[i]:
                 resturantWithoutAgents += 1
-    
+
         # new avg = ( (cur avg * 99) + (resturantWithoutAgents/numberOfResturants) ) / 100
         avg = ((avg*env.now)+(resturantWithoutAgents/numberOfResturants))/(env.now + 1)
 
