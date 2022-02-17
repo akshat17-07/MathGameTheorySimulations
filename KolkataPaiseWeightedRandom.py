@@ -1,15 +1,15 @@
 import simpy
 import random
+import matplotlib.pyplot as plt
 
+day = [] # global variable day would store the number of days
+data = [] # global varialble data woudl store the data points
 
-def randomselection(env):
+def randomselection(env, numberOfResturants):
 
     """
     this function weighted random selection algorithm
     """
-
-    # asking for number of resturant
-    numberOfResturants = int(input("enter the number of resturants/ hotels: "))
     avg = 0
 
     # creting a weighted resturant list
@@ -36,8 +36,8 @@ def randomselection(env):
         # new avg = ( (cur avg * 99) + (resturantWithoutAgents/numberOfResturants) ) / 100
         avg = ((avg*env.now)+(resturantWithoutAgents/numberOfResturants))/(env.now + 1)
 
-        print(env.now + 1, "run gives", resturantWithoutAgents, "without agents")
-        print("avg of agents who get food is after this run is", (1 - avg)*100)
+        day.append(env.now+1)
+        data.append((1-avg)*100)
 
         yield env.timeout(1)
 
@@ -55,8 +55,23 @@ def resetResturantselection(numberOfResturants):
     return resturants
 
 if __name__ == "__main__":
+
+    # asking for number of days program should run
+    time = int(input("how many days program should run: "))
+    # asking for number of resturant
+    numberOfResturants = int(input("enter the number of resturants/ hotels: "))
+
     env = simpy.Environment()
 
-    env.process(randomselection(env))
+    env.process(randomselection(env, numberOfResturants))
 
-    env.run(until=int(input("how many days program should run: ")))
+    env.run(until=time)
+
+    plt.plot(day, data)
+    title = "kolkata Paise Random selection Problem with days = " + str(time) + " and number of resturnts = " + str(numberOfResturants)
+
+    plt.title(title)
+
+    plt.xlabel("Number of days")
+
+    plt.show()

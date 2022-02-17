@@ -1,15 +1,16 @@
 import simpy
 import random
+import matplotlib.pyplot as plt
 
+day = [] # global variable day would store the number of days
+data = [] # global varialble data woudl store the data points
 
-def randomselection(env):
+def randomselection(env, numberOfResturants):
 
     """
     this function random selection algorithm
     """
 
-    # asking for number of resturant
-    numberOfResturants = int(input("enter the number of resturants/ hotels: "))
 
     # defining queue
     maxQueue = int(input("enter the maximum number of people that could be in queue: "))
@@ -43,8 +44,8 @@ def randomselection(env):
 
         avg = ((avg*env.now)+(resturantWithoutAgents/numberOfResturants))/(env.now + 1)
 
-        print(env.now + 1, "run gives", resturantWithoutAgents, "without agents")
-        print("avg of agents who get food is after this run is", (1 - avg)*100)
+        day.append(env.now+1)
+        data.append((1-avg)*100)
 
         yield env.timeout(1)
 
@@ -64,6 +65,20 @@ def resetResturantselection(numberOfResturants):
 if __name__ == "__main__":
     env = simpy.Environment()
 
-    env.process(randomselection(env))
+    # asking for number of resturant
+    numberOfResturants = int(input("enter the number of resturants/ hotels: "))
 
-    env.run(until=int(input("how many days program should run: ")))
+    env.process(randomselection(env, numberOfResturants))
+
+    time = int(input("how many days program should run: "))
+
+    env.run(until=time)
+
+    plt.plot(day, data)
+    title = "kolkata Paise Queue Problem with days = " + str(time) + " and number of resturnts = " + str(numberOfResturants)
+
+    plt.title(title)
+
+    plt.xlabel("Number of days")
+
+    plt.show()
