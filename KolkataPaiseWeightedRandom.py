@@ -68,7 +68,7 @@ if __name__ == "__main__":
     env.run(until=time)
 
     plt.plot(day, data)
-    title = "kolkata Paise Random selection Problem with days = " + str(time) + " and number of resturnts = " + str(numberOfResturants)
+    title = "kolkata Paise Weighted Random selection Problem with days = " + str(time) + " and number of resturnts = " + str(numberOfResturants)
 
     plt.title(title)
 
