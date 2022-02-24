@@ -29,7 +29,7 @@ def dynamic():
         resturant_taken = set()
 
         for agent in probablity_dict.keys():
-            random = randomSelection(probablity_dict[agent], total_probablity)
+            random = randomSelection(probablity_dict[agent], total_probablity, num_of_resturants)
 
             if random in resturant_taken:
                 resturantsWithoutAgents += 1
@@ -69,13 +69,15 @@ def newProbablityDict(dict, random, decrease, increase):
 """
 This function would select a resturant randomly from the list of resturants
 """
-def randomSelection(dict, total_probablity):
+def randomSelection(dict, total_probablity, num):
     select = random.uniform(0, total_probablity)
 
     for i in dict.keys():
-        select -= dict[i]
+        if dict[i] > 0:
+            select -= dict[i]
         if select <= 0:
             return i
+    return random.choice(0,num)
 
 
 
