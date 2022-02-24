@@ -31,8 +31,6 @@ def randomselection(env, numberOfResturants):
         # new avg = ( (cur avg * 99) + (resturantWithoutAgents/numberOfResturants) ) / 100
         avg = ((avg*env.now)+(resturantWithoutAgents/numberOfResturants))/(env.now + 1)
 
-
-
         day.append(env.now+1)
         data.append((1-avg)*100)
 
