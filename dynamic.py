@@ -51,6 +51,7 @@ def dynamic():
     plt.xlabel("Number of days")
 
     plt.show()
+    print(probablity_dict)
 
 
 """
