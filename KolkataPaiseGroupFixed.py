@@ -19,6 +19,12 @@ def run():
         print("Enter atleast one group")
         return 0
 
+    no_of_resturants = int(input("number of resturants: "))
+
+    if no_of_resturants< max(groups):
+        print("resturants could not be less then group size")
+        return 0
+
     free_agents = int(input("Enter Number of free agents: "))
 
     total_agents = 0
@@ -32,7 +38,7 @@ def run():
         dinning = []
 
         for i in groups:
-            temp = list(range(total_agents))
+            temp = list(range(no_of_resturants))
             for j in range(i):
                 t = random.choice(tuple(temp))
                 temp.remove(t)
@@ -43,7 +49,7 @@ def run():
                 else:
                     dinning.append(t)
 
-        temp = range(total_agents)
+        temp = range(no_of_resturants)
         for i in range(free_agents):
             t = random.choice(tuple(temp))
             if t in dinning:
