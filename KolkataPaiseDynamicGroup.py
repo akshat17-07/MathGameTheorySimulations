@@ -1,11 +1,133 @@
 import random
-import matplotlib.pyplot as plt
 
-def run():
+def run(times, days, groups, free_agent, no_of_resturants):
+    data =[]
 
+
+    for i in range(len(groups) + 1):
+        data.append([])
+
+    # running simulation
+    for t in range(times):
+        # running simulation for 1 time
+        for i in range(days):
+
+            # agents choicing resturants
+            dict_rest = CreateResturantsDict(no_of_resturants)
+
+            # running simulating in for groups chosing resturant
+            for agent in groups:
+                list_rest = list(range(1,no_of_resturants + 1))
+                for k in agent:
+                    temp = random.choice(list_rest)
+                    list_rest.remove(temp)
+                    dict_rest[temp].append(k)
+
+            # running simulation on free agent chocing resturant
+            list_rest = list(range(1,no_of_resturants + 1))
+            for k in free_agent:
+                temp = random.choice(list_rest)
+                dict_rest[temp].append(k)
+
+            # calculating the results
+            for j in dict_rest:
+                if len(dict_rest[j]) != 0:
+                    temp = random.choice(dict_rest[j])
+                    if temp in free_agent:
+                        free_agent[temp] += 1
+
+                    else:
+                        for g in groups:
+                            if temp in g:
+                                g[temp] += 1
+                                break
+
+        # calculating mean
+        for grp in groups:
+            for g in grp.keys():
+                grp[g] = grp[g]*100/days
+
+        for f in free_agent.keys():
+            free_agent[f] = free_agent[f]*100/days
+
+        for g in range(len(groups)):
+            data[g].append(len(groups[g]))
+
+        data[-1].append(len(free_agent))
+
+        (groups, free_agent) = resuffle(groups, free_agent)
+
+    for d in data:
+        print(d)
+    return 0
+
+"""
+this function resuffles groups and free agents
+"""
+def resuffle(groups, free_agent):
+    avg = {}
+
+    group_no = 0
+
+    removed_agents = {}
+
+    for grp in groups:
+        avg[group_no] = sum(grp.values())/len(grp)
+
+
+        new_group = {}
+
+        for g in grp.keys():
+            if grp[g] >= avg[group_no]:
+                new_group[g] = 0
+
+            else:
+                removed_agents[g] = 0
+
+        groups[group_no] = new_group
+        group_no += 1
+
+    for f in free_agent.keys():
+        temp = []
+
+        for i in range(len(avg)):
+            if free_agent[f] > avg[i]:
+                temp.append(i)
+
+        if len(temp) == 0:
+            removed_agents[f] = 0
+
+        else:
+            selected = random.choice(temp)
+            groups[selected][f] = 0
+
+    """
+    print("groups: after suffling ")
+    for g in groups:
+        print(g)
+
+    print("agents after suffling")
+    print(removed_agents)
+    """
+    return (groups, removed_agents)
+
+"""
+This cerate resturants dicts
+"""
+def CreateResturantsDict(i):
+    dict = {}
+    for j in range(i):
+        dict[j+1] = []
+
+    return dict
+
+def inputs():
     # taking the inputs
-    days = int(input("How many days is simulation running: "))
+    times = int(input("How many times is simulation running: "))
+    days = int(input("How many days is simulation running before we sort groups: "))
     groups = []
+
+
 
     # creting the groups for the simulation
     print("Enter the number of agent in the group.\n You could create as many groups as u want and to enter 0.\n If this is you do not wish to enter more groups enter 0.")
@@ -20,6 +142,8 @@ def run():
             num_agent += 1
 
         groups.append(dict)
+
+
 
     # checking if the groups exist or not
     if len(groups) == 0:
@@ -43,57 +167,18 @@ def run():
             print("group size could not be greater than number of resturants")
             return 1
 
-    # running simulation
-    for i in range(days):
+    for x in range(50):
 
-        # agents choicing resturants
-        dict_rest = CreateResturantsDict(no_of_resturants)
+        print("run", x+1)
+        g = []
 
-        # running simulating in for groups chosing resturant
-        for agent in groups:
-            list_rest = list(range(1,no_of_resturants + 1))
-            for k in agent:
-                temp = random.choice(list_rest)
-                list_rest.remove(temp)
-                dict_rest[temp].append(k)
+        for i in groups:
+            g.append(i.copy())
+        f = free_agent.copy()
 
-        # running simulation on free agent chocing resturant
-        list_rest = list(range(1,no_of_resturants + 1))
-        for k in free_agent:
-            temp = random.choice(list_rest)
-            dict_rest[temp].append(k)
+        run(times, days, g, f, no_of_resturants)
+        print("\n---------------------------\n---------------------------\n")
 
-        # calculating the results
-        for j in dict_rest:
-            if len(dict_rest[j]) != 0:
-                temp = random.choice(dict_rest[j])
-                if temp in free_agent:
-                    free_agent[temp] += 1
-
-                else:
-                    for g in groups:
-                        if temp in g:
-                            g[temp] += 1
-                            break
-    print("groups:")
-    for g in groups:
-        print(g)
-
-    print("free agents:")
-    print(free_agent)
-
-    return 0
-
-
-"""
-This cerate resturants dicts
-"""
-def CreateResturantsDict(i):
-    dict = {}
-    for j in range(i):
-        dict[j+1] = []
-
-    return dict
 
 if __name__ == "__main__":
-    run()
+    inputs()
