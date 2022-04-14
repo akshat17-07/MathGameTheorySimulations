@@ -1,4 +1,5 @@
 import random
+import csv
 
 def run(times, days, groups, free_agent, no_of_resturants):
     data =[]
@@ -59,7 +60,9 @@ def run(times, days, groups, free_agent, no_of_resturants):
 
     for d in data:
         print(d)
-    return 0
+
+
+    return data
 
 """
 this function resuffles groups and free agents
@@ -121,10 +124,38 @@ def CreateResturantsDict(i):
 
     return dict
 
+def createCsv(data, run, name):
+    name += "run_"
+    name += str(run)
+
+    with open(name, 'w') as f:
+        writer = csv.writer(f)
+
+        header = []
+        for d in range(1,len(data)+1):
+            header.append("Groups " + str(d))
+
+        header[-1] = "free agent"
+
+        writer.writerow(header)
+
+        rows = []
+        for d in data[0]:
+            rows.append([])
+
+        for da in data:
+            for d in range(len(da)):
+                rows[d].append(da[d])
+
+        for r in rows:
+            writer.writerow(r)
+
 def inputs():
     # taking the inputs
     times = int(input("How many times is simulation running: "))
     days = int(input("How many days is simulation running before we sort groups: "))
+    runs = int(input("How many runs do you want to have: "))
+    name = input("name floder you want to see data in: ")
     groups = []
 
 
@@ -167,16 +198,18 @@ def inputs():
             print("group size could not be greater than number of resturants")
             return 1
 
-    for x in range(50):
+    for x in range(1, runs+1):
 
-        print("run", x+1)
+        print("run", x)
         g = []
 
         for i in groups:
             g.append(i.copy())
         f = free_agent.copy()
 
-        run(times, days, g, f, no_of_resturants)
+        data = run(times, days, g, f, no_of_resturants)
+        createCsv(data, x, name)
+
         print("\n---------------------------\n---------------------------\n")
 
 
